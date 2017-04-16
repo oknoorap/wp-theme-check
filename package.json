@@ -4,7 +4,7 @@
   "description": "WordPress Theme Check in NodeJS",
   "main": "index.js",
   "scripts": {
-    "test": "xo && ava"
+    "test": "xo && ava --verbose"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,19 @@
   "bugs": {
     "url": "https://github.com/oknoorap/wp-theme-check/issues"
   },
-  "homepage": "https://github.com/oknoorap/wp-theme-check#readme"
+  "homepage": "https://github.com/oknoorap/wp-theme-check#readme",
+  "devDependencies": {
+    "ava": "^0.19.1",
+    "xo": "^0.18.1"
+  },
+  "ava": {
+    "files": [
+      "test/test.js"
+    ]
+  },
+  "xo": {
+    "esnext": true,
+    "space": true,
+    "semicolon": false
+  }
 }
