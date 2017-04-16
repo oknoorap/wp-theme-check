@@ -1,0 +1,23 @@
+{
+  "name": "wp-theme-check",
+  "version": "1.0.0",
+  "description": "WordPress Theme Check in NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "xo && ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oknoorap/wp-theme-check.git"
+  },
+  "keywords": [
+    "wordpress",
+    "php"
+  ],
+  "author": "oknoorap",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oknoorap/wp-theme-check/issues"
+  },
+  "homepage": "https://github.com/oknoorap/wp-theme-check#readme"
+}
