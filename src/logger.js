@@ -47,10 +47,14 @@ exports.error = data => {
 exports.error2 = data => {
   const $ = cheerio.load(data.message)
   $('strong').each((i, el) => {
-    $(el).replaceWith(() => chalk.magenta($(el).text()))
+    $(el).replaceWith(() => chalk.magenta(escapeGoat.unescape($(el).text())))
   })
 
-  const message = escapeGoat.unescape($('body').text())
+  $('a').each((i, el) => {
+    $(el).replaceWith(() => chalk.underline.blue($(el).attr('href')))
+  })
+
+  const message = escapeGoat.unescape($('body').html())
   console.error(tab(`${logSymbols[data.type]} ${message}`))
 }
 

@@ -64,7 +64,7 @@ module.exports = (dir, options = {}) => new Promise((resolve, reject) => {
             let message = item.split(':')
             message.shift()
 
-            message = message[0]
+            message = message.join('')
 
             return {
               type,
