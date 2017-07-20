@@ -312,34 +312,53 @@ function utf8_uri_encode( $utf8_string, $length = 0 ) {
 	return $unicode;
 }
 
-function get_theme_data_from_contents( $content = '' ) {
-	// Make sure we catch CR-only line endings.
-	$content = str_replace( "\r", "\n", $content );
+function get_theme_data_from_contents( $theme_data = '' ) {
 
-	$all_headers = array(
-		'Tags' => 'Tags',
-		'Name' => 'Name',
-		'URI' => 'ThemeURI',
-		'Description' => 'Description',
-		'Author' => 'Author',
-		'AuthorURI' => 'AuthorURI',
-		'Version' => 'Version',
-		'Template' => 'Template',
-		'Status' => 'Status',
-		'Tags' => 'Tags',
-		'Title' => 'Name',
-		'AuthorName' => 'Author',
-		'License'	=> 'License',
-		'License URI'	=> 'License URI',
-		'Template Version'	=> 'Template Version',
-	);
+	$theme_data = str_replace ( '\r', '\n', $theme_data );
+	preg_match( '|^[ \t\/*#@]*Theme Name:(.*)$|mi', $theme_data, $theme_name );
+	preg_match( '|^[ \t\/*#@]*Theme URI:(.*)$|mi', $theme_data, $theme_uri );
+	preg_match( '|^[ \t\/*#@]*Description:(.*)$|mi', $theme_data, $description );
 
-	foreach ( $all_headers as $field => $regex ) {
-		if ( preg_match( '/^[ \t\/*#@]*' . preg_quote( $regex, '/' ) . ':(.*)$/mi', $file_data, $match ) && $match[1] )
-			$all_headers[ $field ] = _cleanup_header_comment( $match[1] );
-		else
-			$all_headers[ $field ] = '';
+	if ( preg_match( '|^[ \t\/*#@]*Author URI:(.*)$|mi', $theme_data, $author_uri ) )
+		$author_uri = trim( $author_uri[1]);
+	else
+		$author_uri = '';
+
+	if ( preg_match( '|^[ \t\/*#@]*Template:(.*)$|mi', $theme_data, $template ) )
+		$template = trim( $template[1] );
+	else
+		$template = '';
+
+	if ( preg_match( '|^[ \t\/*#@]*Version:(.*)|mi', $theme_data, $version ) )
+		$version = trim( $version[1] );
+	else
+		$version = '';
+
+	if ( preg_match('|^[ \t\/*#@]*Status:(.*)|mi', $theme_data, $status) )
+		$status = trim( $status[1] );
+	else
+		$status = 'publish';
+
+	if ( preg_match('|^[ \t\/*#@]*Tags:(.*)|mi', $theme_data, $tags) )
+		$tags = array_map( 'trim', explode( ',', trim( $tags[1] ) ) );
+	else
+		$tags = array();
+
+	$theme = ( isset( $theme_name[1] ) ) ? trim( $theme_name[1] ) : '';
+
+	$theme_uri = ( isset( $theme_uri[1] ) ) ? trim( $theme_uri[1] ) : '';
+
+	$description = ( isset( $description[1] ) ) ? trim( $description[1] ) : '';
+
+	if ( preg_match( '|^[ \t\/*#@]*Author:(.*)$|mi', $theme_data, $author_name ) ) {
+		if ( empty( $author_uri ) ) {
+			$author = trim( $author_name[1] );
+		} else {
+			$author = sprintf( '<a href="%1$s" title="%2$s">%3$s</a>', $author_uri, __( 'Visit author homepage' ), trim( $author_name[1] ) );
+		}
+	} else {
+		$author = __('Anonymous');
 	}
 
-	return $all_headers;
+	return array( 'Name' => $theme, 'Title' => $theme, 'URI' => $theme_uri, 'Description' => $description, 'Author' => $author, 'Author_URI' => $author_uri, 'Version' => $version, 'Template' => $template, 'Status' => $status, 'Tags' => $tags );
 }
