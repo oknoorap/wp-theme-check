@@ -8,6 +8,8 @@ exports.validatorLabels = {
   THEME_CHECK: 'Theme Check'
 }
 
+/* eslint-disable camelcase */
+/* eslint-disable key-spacing */
 exports.validatorThemeCheckLabels = {
   AdminMenu: 'Admin Menu',
   NoHiddenAdminBar: 'Admin Bar',
@@ -57,3 +59,4 @@ exports.validatorThemeCheckLabels = {
   WidgetsCheck: 'Theme Feature: Widgets',
   WormCheck: 'Security: Worm'
 }
+/* eslint-enable */
