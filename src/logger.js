@@ -54,6 +54,10 @@ exports.error2 = data => {
     $(el).replaceWith(() => chalk.underline.blue($(el).attr('href')))
   })
 
+  $('pre').each((i, el) => {
+    $(el).replaceWith(() => chalk.underline.gray($(el).text()))
+  })
+
   const message = escapeGoat.unescape($('body').html())
   console.error(tab(`${logSymbols[data.type]} ${message}`))
 }
