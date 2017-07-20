@@ -40,7 +40,8 @@ module.exports = (dir, options = {}) => new Promise((resolve, reject) => {
     validator: options.validator
   })
 
-  const scriptPath = path.join('php-scripts', 'validators', 'validator.php')
+  const rootDir = path.resolve(__dirname, '..')
+  const scriptPath = path.join(rootDir, 'php-scripts', 'validators', 'validator.php')
   const validatorScript = spawn('php', [scriptPath, args])
 
   validatorScript.stdout.on('data', buffer => {
