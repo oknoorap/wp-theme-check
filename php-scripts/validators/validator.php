@@ -23,8 +23,14 @@ if ( ! isset( $argv[1] )) {
 
 $json = json_decode( $argv[1], true );
 $path = $json['path'];
-$excludes = $json['excludes'];
 $validator = $json['validator'];
+$excludes = array_merge( array(
+	'node_modules',
+	'bower_components',
+	'.git',
+), $json['excludes'] );
+$excludes = array_unique( $excludes );
+
 $error_logs = array();
 $themechecks = array();
 
