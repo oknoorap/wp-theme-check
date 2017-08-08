@@ -53,6 +53,9 @@ class Theme_Check_Validator {
 			array_push( $files, $file->getPathname() );
 		}
 
+		// Apply exclude path.
+		$exclude_pattern = implode( '|', array_map( 'preg_quote', $this->excludes ) );
+		$files = preg_grep( '/' . $exclude_pattern .  '/', $files, PREG_GREP_INVERT);
 		return $files;
 	}
 

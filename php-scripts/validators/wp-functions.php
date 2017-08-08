@@ -362,3 +362,29 @@ function get_theme_data_from_contents( $theme_data = '' ) {
 
 	return array( 'Name' => $theme, 'Title' => $theme, 'URI' => $theme_uri, 'Description' => $description, 'Author' => $author, 'Author_URI' => $author_uri, 'Version' => $version, 'Template' => $template, 'Status' => $status, 'Tags' => $tags );
 }
+
+function tc_preg( $preg, $file ) {
+	if ( ! file_exists( $file ) ) {
+		return '';
+	}
+	$lines = file( $file, FILE_IGNORE_NEW_LINES ); // Read the theme file into an array
+	$line_index = 0;
+	$bad_lines = '';
+	$error = '';
+	foreach( $lines as $this_line ) {
+		if ( preg_match( $preg, $this_line, $matches ) ) {
+			$error = $matches[0];
+			$this_line = str_replace( '"', "'", $this_line );
+			$error = ltrim( $error );
+			$pre = '';
+			if ( !empty( $error ) ) {
+				$pre = ( FALSE !== ( $pos = strpos( $this_line, $error ) ) ? substr( $this_line, 0, $pos ) : FALSE );
+			}
+			$pre = ltrim( htmlspecialchars( $pre ) );
+			$bad_lines .= "<pre class='tc-grep'>" . __("Line ", "theme-check") . ( $line_index+1 ) . ": " . $pre . htmlspecialchars( substr( stristr( $this_line, $error ), 0, 75 ) ) . "</pre>";
+		}
+		$line_index++;
+
+	}
+	return str_replace( $error, '<span class="tc-grep">' . $error . '</span>', $bad_lines );
+}
