@@ -90,11 +90,12 @@ const action = (args) => {
 
         logger.blank()
         logger.error(notice)
+        logger.blank()
+        process.exit(1)
       } else {
         logger.done('Your theme have no errors.')
+        logger.blank()
       }
-
-      logger.blank()
     }).catch(nonZeroExit)
   }).catch(nonZeroExit)
 }
