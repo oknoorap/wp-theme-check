@@ -2,11 +2,11 @@
 WordPress Theme Check in Node.js. [Theme Mentor](https://github.com/Ataurr/Theme-Mentor-For-Themeforest) and [Theme Check](https://wordpress.org/plugins/theme-check)
 
 ## Motivation
-After 5 years developing themes in WordPress, I realize that implementing good workflow is hard. After wandering in javascript world, my perspective about workflow really changed. All tasks are automated. Today, I'm going back to WordPress world. Here is reason why this project is good in WordPress development workflow:
+After 5 years developing themes in WordPress, I realize that implementing good workflow is hard. After wandering in javascript world, my perspective about workflow really changed. All tasks are automated. Today, I'm going back to WordPress world. Here is reason why this project is good for WordPress development workflow:
 
 * You don't need to install WordPress and setup server in CI server.
-* You don't need to install Plugin to check is theme valid or not.
-* Your wasting time to check in plugin page will be handled in Continous Integration script.
+* You don't need to install Plugin to check whether theme is valid or not.
+* Your wasting time checking theme with plugin will be handled in Continous Integration script.
 
 ## :computer: Install 
 Using NPM  
