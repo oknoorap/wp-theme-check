@@ -59,4 +59,10 @@ exports.validatorThemeCheckLabels = {
   WidgetsCheck: 'Theme Feature: Widgets',
   WormCheck: 'Security: Worm'
 }
+
+exports.errorTypes = {
+  ERROR: 'error',
+  WARNING: 'warning',
+  INFO: 'info'
+}
 /* eslint-enable */

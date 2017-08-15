@@ -25,7 +25,7 @@ exports.underline = msg => {
 }
 
 exports.title = msg => {
-  console.info(tab(chalk.bgBlue(`>>> ${msg} <<<`)))
+  console.info(tab(chalk.bgBlue(`-------- ${msg} --------`)))
 }
 
 exports.info = msg => {
@@ -55,7 +55,10 @@ exports.error2 = data => {
   })
 
   $('pre').each((i, el) => {
-    $(el).replaceWith(() => chalk.underline.gray($(el).text()))
+    $(el).replaceWith(() => {
+      const text = escapeGoat.unescape($(el).text())
+      return '\n' + tab(chalk.underline.gray(text))
+    })
   })
 
   const message = escapeGoat.unescape($('body').html())
