@@ -6,33 +6,64 @@ const updateNotifier = require('update-notifier')
 const ora = require('ora')
 const pkg = require('../package.json')
 const themeCheck = require('../src/theme-check')
-const {validatorTypes, validatorLabels, validatorThemeCheckLabels} = require('../src/fixtures')
+const {
+  validatorTypes,
+  validatorLabels,
+  validatorThemeCheckLabels,
+  errorTypes
+} = require('../src/fixtures')
 const logger = require('../src/logger')
 
-const action = (args) => {
-  const spinner = ora('Checking theme...')
+const simpleDotsLoader = {
+  interval: 70,
+  frames: [
+    '.  ',
+    '.. ',
+    ' ..',
+    ' ..',
+    '  .',
+    '   '
+  ]
+}
 
-  logger.blank()
-  spinner.start()
-  logger.blank()
-
+const action = (args, options) => {
   const nonZeroExit = err => {
     spinner.stop()
     logger.error(err.message)
     process.exit(1)
   }
 
-  themeCheck(args.path).then(results => {
+  const opts = {
+    validator: [
+      validatorTypes.THEME_MENTOR,
+      validatorTypes.THEME_CHECK
+    ]
+  }
+
+  if (options.withThemeCheck) {
+    opts.validator = [validatorTypes.THEME_CHECK]
+  }
+
+  if (options.withThemeMentor) {
+    opts.validator = [validatorTypes.THEME_MENTOR]
+  }
+
+  let spinner
+
+  logger.blank()
+  spinner = ora('Checking theme...').start()
+  spinner.spinner = simpleDotsLoader
+
+  themeCheck(args.path, opts).then(results => {
     let errors = 0
     let warnings = 0
 
+    logger.blank()
     spinner.stop()
 
     Promise.all(results.map(
       (validator, index) => new Promise(resolve => {
         if (validator.result.length > 0) {
-          errors += validator.result.length
-
           logger.blank()
 
           if (index > 0) {
@@ -50,15 +81,22 @@ const action = (args) => {
               }
 
               if (validator.name === validatorTypes.THEME_MENTOR) {
-                logger.underline(`${path.join(args.path, item.filename)}:${item.line}`)
+                if (item.type === errorTypes.ERROR) {
+                  errors++
+                }
                 logger.error(item)
+                logger.underline(`${path.join(args.path, item.filename)}:${item.line}`)
               } else {
                 logger.underline(validatorThemeCheckLabels[item.label])
                 item.items.forEach(log => {
-                  if (log.type === 'warning') {
+                  if (log.type === errorTypes.WARNING) {
                     warnings++
                   }
+                  if (log.type === errorTypes.ERROR) {
+                    errors++
+                  }
                   logger.error2(log)
+                  logger.blank()
                 })
               }
               resolve()
@@ -80,9 +118,7 @@ const action = (args) => {
         }
 
         if (warnings > 0) {
-          if (warnings > 0) {
-            notice += ' and'
-          }
+          notice += ' and'
           notice += ` ${warnings} warnings`
         }
 
