@@ -25,7 +25,7 @@ exports.underline = msg => {
 }
 
 exports.title = msg => {
-  console.info(tab(chalk.bgBlue(`>>> ${msg} <<<`)))
+  console.info(tab(chalk.bgBlue(`-------- ${msg} --------`)))
 }
 
 exports.info = msg => {
