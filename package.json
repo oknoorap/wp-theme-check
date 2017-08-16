@@ -38,8 +38,8 @@
     "caporal": "^0.7.0",
     "chalk": "^2.0.1",
     "cheerio": "^1.0.0-rc.2",
-    "escape-goat": "^1.1.0",
     "extend": "^3.0.1",
+    "html-entities": "^1.2.1",
     "log-symbols": "^1.0.2",
     "ora": "^1.3.0",
     "update-notifier": "^2.2.0"

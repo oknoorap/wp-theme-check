@@ -2,7 +2,9 @@
 const chalk = require('chalk')
 const cheerio = require('cheerio')
 const logSymbols = require('log-symbols')
-const escapeGoat = require('escape-goat')
+const {AllHtmlEntities} = require('html-entities')
+
+const entities = new AllHtmlEntities()
 
 exports.blank = () => {
   console.log('')
@@ -47,7 +49,7 @@ exports.error = data => {
 exports.error2 = data => {
   const $ = cheerio.load(data.message)
   $('strong').each((i, el) => {
-    $(el).replaceWith(() => chalk.magenta(escapeGoat.unescape($(el).text())))
+    $(el).replaceWith(() => chalk.magenta(entities.decode($(el).text())))
   })
 
   $('a').each((i, el) => {
@@ -56,12 +58,12 @@ exports.error2 = data => {
 
   $('pre').each((i, el) => {
     $(el).replaceWith(() => {
-      const text = escapeGoat.unescape($(el).text())
+      const text = entities.decode($(el).text())
       return '\n' + tab(chalk.underline.gray(text))
     })
   })
 
-  const message = escapeGoat.unescape($('body').html())
+  const message = entities.decode($('body').html())
   console.error(tab(`${logSymbols[data.type]} ${message}`))
 }
 
