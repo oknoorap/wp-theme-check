@@ -20,6 +20,17 @@ const tab = (msg, count = 1) => {
   return `${tabs.join('')}${msg}`
 }
 
+const stdlog = (data, symbol = 'error') => {
+  const isObject = typeof data === 'object'
+  const message = isObject ? `${data.message}` : data
+
+  console.error(tab(`${logSymbols[symbol]} ${message}`))
+
+  if (isObject && data.snippet) {
+    console.info(tab(`${logSymbols.info} ${data.snippet}`))
+  }
+}
+
 exports.tab = tab
 
 exports.underline = msg => {
@@ -34,16 +45,8 @@ exports.info = msg => {
   console.info(tab(`${logSymbols.info} ${chalk.cyan(msg)}`))
 }
 
-exports.error = data => {
-  const isObject = typeof data === 'object'
-  const message = isObject ? `${data.message}` : data
-
-  console.error(tab(`${logSymbols.error} ${message}`))
-
-  if (isObject && data.snippet) {
-    console.info(tab(`${logSymbols.info} ${data.snippet}`))
-  }
-}
+exports.error = (data) => stdlog(data)
+exports.warning = (data) => stdlog(data, 'warning')
 
 // Error log for theme-check
 exports.error2 = data => {
