@@ -45,8 +45,8 @@ exports.info = msg => {
   console.info(tab(`${logSymbols.info} ${chalk.cyan(msg)}`))
 }
 
-exports.error = (data) => stdlog(data)
-exports.warning = (data) => stdlog(data, 'warning')
+exports.error = data => stdlog(data)
+exports.warning = data => stdlog(data, 'warning')
 
 // Error log for theme-check
 exports.error2 = data => {
