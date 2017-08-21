@@ -134,7 +134,7 @@ const action = (args, options) => {
           logger.error(notice)
         }
 
-        if (warnings > 0) {
+        if (errors === 0 && warnings > 0) {
           logger.warning(notice)
         }
         logger.blank()
