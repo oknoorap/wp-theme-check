@@ -33,7 +33,8 @@ $excludes = array_unique( $excludes );
 
 $error_logs = array();
 $themechecks = array();
-$data = get_theme_data_from_contents($path . '/style.css');
+$style = file_get_contents( $path . '/style.css' );
+$data = get_theme_data_from_contents( $style );
 $themename = $data['Name'];
 
 if ( in_array( VALIDATOR_THEME_CHECK, $validator, true ) ) {

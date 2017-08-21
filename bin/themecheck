@@ -88,7 +88,7 @@ const action = (args, options) => {
                 logger.underline(`${path.join(args.path, item.filename)}:${item.line}`)
               } else {
                 logger.underline(validatorThemeCheckLabels[item.label])
-                item.items.forEach(log => {
+                item.items.forEach((log, index) => {
                   if (log.type === errorTypes.WARNING) {
                     warnings++
                   }
@@ -96,7 +96,10 @@ const action = (args, options) => {
                     errors++
                   }
                   logger.error2(log)
-                  logger.blank()
+
+                  if (index < item.items.length - 1) {
+                    logger.blank()
+                  }
                 })
               }
               resolve()
@@ -118,16 +121,27 @@ const action = (args, options) => {
         }
 
         if (warnings > 0) {
-          notice += ' and'
+          if (errors > 0) {
+            notice += ' and'
+          }
           notice += ` ${warnings} warnings`
         }
 
         notice += '.'
 
         logger.blank()
-        logger.error(notice)
+        if (errors > 0) {
+          logger.error(notice)
+        }
+
+        if (errors === 0 && warnings > 0) {
+          logger.warning(notice)
+        }
         logger.blank()
-        process.exit(1)
+
+        if (errors > 0) {
+          process.exit(1)
+        }
       } else {
         logger.done('Your theme have no errors.')
         logger.blank()
