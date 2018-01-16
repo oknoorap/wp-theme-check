@@ -82,8 +82,8 @@ module.exports = (dir, options = {}) => new Promise((resolve, reject) => {
       })
 
       resolve(results)
-    } catch(err) {
-      reject(`Error: ${err.message} with data ${data}`)
+    } catch (err) {
+      throw new Error(`Error: ${err.message} with data ${data}`)
     }
   })
 })
