@@ -57,29 +57,33 @@ module.exports = (dir, options = {}) => new Promise((resolve, reject) => {
       reject(new Error('Non-Zero Exit.'))
     }
 
-    const results = JSON.parse(data.join('')).map(validator => {
-      if (validator.name === validatorTypes.THEME_CHECK) {
-        validator.result = validator.result.map(resultItem => {
-          resultItem.items = resultItem.items.map(item => {
-            const type = getSymbolType(item)
-            let message = item.split(':')
-            message.shift()
+    try {
+      const results = JSON.parse(data.join('')).map(validator => {
+        if (validator.name === validatorTypes.THEME_CHECK) {
+          validator.result = validator.result.map(resultItem => {
+            resultItem.items = resultItem.items.map(item => {
+              const type = getSymbolType(item)
+              let message = item.split(':')
+              message.shift()
 
-            message = message.join('')
+              message = message.join('')
 
-            return {
-              type,
-              message
-            }
+              return {
+                type,
+                message
+              }
+            })
+
+            return resultItem
           })
+        }
 
-          return resultItem
-        })
-      }
+        return validator
+      })
 
-      return validator
-    })
-
-    resolve(results)
+      resolve(results)
+    } catch(err) {
+      reject(`Error: ${err.message} with data ${data}`)
+    }
   })
 })
