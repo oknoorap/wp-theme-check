@@ -48,6 +48,10 @@ const action = (args, options) => {
     opts.validator = [validatorTypes.THEME_MENTOR]
   }
 
+  if (options.excludes) {
+    opts.excludes = options.excludes.split(',')
+  }
+
   let spinner
 
   logger.blank()
@@ -154,6 +158,7 @@ program
   .version(pkg.version)
   .description('WordPress Theme Check')
   .argument('[path]', 'Script path could be theme directory.')
+  .option('--excludes', 'Excludes path, can be multiple separated by commas.', program.STRING)
   .option('--with-theme-mentor', 'Only use theme mentor as validator.', program.BOOLEAN)
   .option('--with-theme-check', 'Only use theme check as validator.', program.BOOLEAN)
   .action(action)

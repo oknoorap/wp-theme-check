@@ -25,6 +25,7 @@ module.exports = (dir, options = {}) => new Promise((resolve, reject) => {
   }
 
   options = extend({
+    excludes: [],
     validator: [
       validatorTypes.THEME_MENTOR,
       validatorTypes.THEME_CHECK
@@ -36,7 +37,7 @@ module.exports = (dir, options = {}) => new Promise((resolve, reject) => {
   const data = []
   const args = JSON.stringify({
     path: dir,
-    excludes: [],
+    excludes: options.excludes,
     validator: options.validator
   })
 
@@ -48,8 +49,15 @@ module.exports = (dir, options = {}) => new Promise((resolve, reject) => {
     data.push(buffer.toString())
   })
 
+  const errData = []
   validatorScript.stderr.on('data', buffer => {
-    reject(buffer.toString())
+    errData.push(buffer.toString())
+  })
+
+  validatorScript.stderr.on('close', () => {
+    if (errData.length > 0) {
+      reject(new Error(errData.join('')))
+    }
   })
 
   validatorScript.on('exit', code => {
