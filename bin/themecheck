@@ -54,13 +54,26 @@ const action = (args, options) => {
 
   let spinner
 
-  logger.blank()
-  spinner = ora('Checking theme...').start()
-  spinner.spinner = simpleDotsLoader
+  if (!options.json) {
+    logger.blank()
+    spinner = ora('Checking theme...').start()
+    spinner.spinner = simpleDotsLoader
+  }
 
   themeCheck(args.path, opts).then(results => {
     let errors = 0
     let warnings = 0
+
+    if (options.json) {
+      const json = {}
+
+      results.forEach(item => {
+        json[item.name] = item.result
+      })
+
+      logger.log(json)
+      process.exit()
+    }
 
     logger.blank()
     spinner.stop()
@@ -161,6 +174,7 @@ program
   .option('--excludes', 'Excludes path, can be multiple separated by commas.', program.STRING)
   .option('--with-theme-mentor', 'Only use theme mentor as validator.', program.BOOLEAN)
   .option('--with-theme-check', 'Only use theme check as validator.', program.BOOLEAN)
+  .option('--json', 'Print output as JSON format.', program.BOOLEAN)
   .action(action)
 
 program.parse(process.argv)

@@ -73,3 +73,7 @@ exports.error2 = data => {
 exports.done = msg => {
   console.log(tab(`${logSymbols.success} ${chalk.green(msg)}`))
 }
+
+exports.log = msg => {
+  console.log(msg)
+}
