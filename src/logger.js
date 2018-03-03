@@ -74,6 +74,6 @@ exports.done = msg => {
   console.log(tab(`${logSymbols.success} ${chalk.green(msg)}`))
 }
 
-exports.log = msg => {
-  console.log(msg)
+exports.json = str => {
+  console.log(JSON.stringify(str))
 }

@@ -27,6 +27,14 @@ const simpleDotsLoader = {
 }
 
 const action = (args, options) => {
+  let spinner
+
+  if (!options.json) {
+    logger.blank()
+    spinner = ora('Checking theme...').start()
+    spinner.spinner = simpleDotsLoader
+  }
+
   const nonZeroExit = err => {
     spinner.stop()
     logger.error(err.message)
@@ -52,14 +60,6 @@ const action = (args, options) => {
     opts.excludes = options.excludes.split(',')
   }
 
-  let spinner
-
-  if (!options.json) {
-    logger.blank()
-    spinner = ora('Checking theme...').start()
-    spinner.spinner = simpleDotsLoader
-  }
-
   themeCheck(args.path, opts).then(results => {
     let errors = 0
     let warnings = 0
@@ -67,12 +67,34 @@ const action = (args, options) => {
     if (options.json) {
       const json = {}
 
-      results.forEach(item => {
-        json[item.name] = item.result
+      results.forEach(validator => {
+        validator.result.forEach(item => {
+          if (validator.name === validatorTypes.THEME_MENTOR) {
+            if (item.type === errorTypes.ERROR) {
+              errors++
+            }
+          } else {
+            item.items.forEach(log => {
+              if (log.type === errorTypes.WARNING) {
+                warnings++
+              }
+              if (log.type === errorTypes.ERROR) {
+                errors++
+              }
+            })
+          }
+        })
+
+        json[validator.name] = validator.result
       })
 
-      logger.log(json)
-      process.exit()
+      logger.json(json)
+
+      if (errors > 0) {
+        process.exit(1)
+      } else {
+        process.exit()
+      }
     }
 
     logger.blank()
