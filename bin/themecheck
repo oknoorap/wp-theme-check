@@ -90,7 +90,7 @@ const action = (args, options) => {
 
       logger.json(json)
 
-      if (errors > 0) {
+      if (errors > 0 || (warnings > 0 && !options.skipWarning)) {
         process.exit(1)
       } else {
         process.exit()
@@ -173,13 +173,16 @@ const action = (args, options) => {
           logger.error(notice)
         }
 
-        if (errors === 0 && warnings > 0) {
+        if (errors === 0 && (warnings > 0 && !options.skipWarning)) {
           logger.warning(notice)
         }
+
         logger.blank()
 
-        if (errors > 0) {
+        if (errors > 0 || (warnings > 0 && !options.skipWarning)) {
           process.exit(1)
+        } else {
+          process.exit()
         }
       } else {
         logger.done('Your theme have no errors.')
@@ -197,6 +200,7 @@ program
   .option('--with-theme-mentor', 'Only use theme mentor as validator.', program.BOOLEAN)
   .option('--with-theme-check', 'Only use theme check as validator.', program.BOOLEAN)
   .option('--json', 'Print output as JSON format.', program.BOOLEAN)
+  .option('--skip-warning', 'Skip warning message.', program.BOOLEAN)
   .action(action)
 
 program.parse(process.argv)
