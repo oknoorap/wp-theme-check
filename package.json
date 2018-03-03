@@ -1,6 +1,6 @@
 {
   "name": "wp-theme-check",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "WordPress Theme Check in NodeJS",
   "main": "index.js",
   "scripts": {
