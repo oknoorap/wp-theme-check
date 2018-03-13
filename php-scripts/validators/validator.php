@@ -41,7 +41,7 @@ if ( in_array( VALIDATOR_THEME_CHECK, $validator, true ) ) {
 	$theme_check_validator = new Theme_Check_Validator( $path, $excludes );
 	$error_logs[] = array(
 		'id' => 'THEME_CHECK',
-		'name' => VALIDATOR_THEME_CHECK,
+		'type' => VALIDATOR_THEME_CHECK,
 		'result' => $theme_check_validator->result(),
 	);
 }
@@ -50,7 +50,7 @@ if ( in_array( VALIDATOR_THEME_MENTOR, $validator, true ) ) {
 	$theme_mentor_validator = new Theme_Mentor_Validator( $path, $excludes );
 	$error_logs[] = array(
 		'id' => 'THEME_MENTOR',
-		'name' => VALIDATOR_THEME_MENTOR,
+		'type' => VALIDATOR_THEME_MENTOR,
 		'result' => $theme_mentor_validator->result(),
 	);
 }

@@ -67,7 +67,7 @@ module.exports = (dir, options = {}) => new Promise((resolve, reject) => {
 
     try {
       const results = JSON.parse(data.join('')).map(validator => {
-        if (validator.name === validatorTypes.THEME_CHECK) {
+        if (validator.type === validatorTypes.THEME_CHECK) {
           validator.result = validator.result.map(resultItem => {
             resultItem.items = resultItem.items.map(item => {
               const type = getSymbolType(item)
