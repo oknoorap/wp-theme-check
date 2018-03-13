@@ -4,6 +4,7 @@ const path = require('path')
 const program = require('caporal')
 const updateNotifier = require('update-notifier')
 const ora = require('ora')
+const chalk = require('chalk')
 const pkg = require('../package.json')
 const themeCheck = require('../src/theme-check')
 const {
@@ -28,6 +29,19 @@ const simpleDotsLoader = {
 
 const action = (args, options) => {
   let spinner
+
+  if (options.ruleList) {
+    if (options.json) {
+      logger.json(Object.keys(validatorThemeCheckLabels))
+    } else {
+      process.stdout.write(`\n${chalk.cyan('Rule list')}\n\n`)
+      for (const label in validatorThemeCheckLabels) {
+        process.stdout.write(`  ${chalk.gray('*')} ${chalk.cyan(label)}\n`)
+      }
+      process.stdout.write('\n')
+    }
+    process.exit()
+  }
 
   if (!options.json) {
     logger.blank()
@@ -64,12 +78,25 @@ const action = (args, options) => {
     let errors = 0
     let warnings = 0
 
+    if (options.excludeRules) {
+      options.exludeRules = options.excludeRules.split(',')
+      results = results.map(validator => {
+        if (validator.type === validatorTypes.THEME_CHECK) {
+          validator.result = validator.result.filter(item => {
+            return !options.exludeRules.includes(item.label)
+          })
+        }
+
+        return validator
+      })
+    }
+
     if (options.json) {
       const json = {}
 
       results.forEach(validator => {
         validator.result.forEach(item => {
-          if (validator.name === validatorTypes.THEME_MENTOR) {
+          if (validator.type === validatorTypes.THEME_MENTOR) {
             if (item.type === errorTypes.ERROR) {
               errors++
             }
@@ -85,7 +112,7 @@ const action = (args, options) => {
           }
         })
 
-        json[validator.name] = validator.result
+        json[validator.type] = validator.result
       })
 
       logger.json(json)
@@ -119,7 +146,7 @@ const action = (args, options) => {
                 logger.blank()
               }
 
-              if (validator.name === validatorTypes.THEME_MENTOR) {
+              if (validator.type === validatorTypes.THEME_MENTOR) {
                 if (item.type === errorTypes.ERROR) {
                   errors++
                 }
@@ -196,7 +223,9 @@ program
   .version(pkg.version)
   .description('WordPress Theme Check')
   .argument('[path]', 'Script path could be theme directory.')
-  .option('--excludes', 'Excludes path, can be multiple separated by commas.', program.STRING)
+  .option('--excludes', 'Excludes path, separated by commas.', program.STRING)
+  .option('--exclude-rules', 'Exclude rules by label for `theme-check`, separated by commas', program.STRING)
+  .option('--rule-list', 'Display available rules for `theme-check`', program.BOOLEAN)
   .option('--with-theme-mentor', 'Only use theme mentor as validator.', program.BOOLEAN)
   .option('--with-theme-check', 'Only use theme check as validator.', program.BOOLEAN)
   .option('--json', 'Print output as JSON format.', program.BOOLEAN)
